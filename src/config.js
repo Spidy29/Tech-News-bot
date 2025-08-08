@@ -17,7 +17,7 @@ module.exports = {
     
     // Gemini AI configuration
     ai: {
-        model: 'gemini-pro',
+        model: 'gemini-1.5-flash',
         maxTokens: 1000,
         temperature: 0.7
     },
