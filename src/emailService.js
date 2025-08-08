@@ -9,7 +9,7 @@ class EmailService {
 
     setupTransporter() {
         // Gmail configuration (you can modify for other email providers)
-        this.transporter = nodemailer.createTransporter({
+        this.transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
                 user: process.env.EMAIL_USER,
@@ -21,7 +21,7 @@ class EmailService {
         // Uncomment and modify as needed:
         
         // For Outlook/Hotmail:
-        // this.transporter = nodemailer.createTransporter({
+        // this.transporter = nodemailer.createTransport({
         //     service: 'hotmail',
         //     auth: {
         //         user: process.env.EMAIL_USER,
@@ -30,7 +30,7 @@ class EmailService {
         // });
 
         // For custom SMTP:
-        // this.transporter = nodemailer.createTransporter({
+        // this.transporter = nodemailer.createTransport({
         //     host: process.env.SMTP_HOST,
         //     port: process.env.SMTP_PORT,
         //     secure: process.env.SMTP_SECURE === 'true',
