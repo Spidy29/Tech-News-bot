@@ -108,10 +108,11 @@ class NewsBot {
     }
 
     // Format and display the news
-    async formatAndDisplayNews(processedNews) {
-        console.log('\n' + '='.repeat(80));
+    async formatAndDisplayNews(processedNews, trendingTopics) {
+        console.log('\n' + '='.repeat(90));
         console.log('📰 DAILY TECH NEWS DIGEST - ' + new Date().toDateString());
-        console.log('='.repeat(80));
+        console.log('🎯 Tailored for Backend Developers');
+        console.log('='.repeat(90));
 
         const categoryIcons = {
             tech: '💻',
@@ -120,38 +121,96 @@ class NewsBot {
             global: '🌍',
             frameworks: '⚛️',
             advice: '💡',
-            future: '🔮'
+            future: '🔮',
+            trending: '📈',
+            recommendations: '🎯'
         };
 
         const categoryTitles = {
             tech: 'TECHNOLOGY NEWS',
             security: 'SECURITY UPDATES',
             ai: 'AI & MACHINE LEARNING',
-            global: 'GLOBAL NEWS',
+            global: 'GLOBAL NEWS IMPACT',
             frameworks: 'FRAMEWORK UPDATES',
             advice: 'DEVELOPER ADVICE',
-            future: 'FUTURE INSIGHTS'
+            future: 'FUTURE INSIGHTS',
+            trending: 'TRENDING TOPICS',
+            recommendations: 'PERSONALIZED RECOMMENDATIONS'
         };
 
-        for (const [category, data] of Object.entries(processedNews)) {
+        // Display trending topics first if available
+        if (trendingTopics && trendingTopics.length > 0) {
+            console.log(`\n📈 TRENDING TOPICS`);
+            console.log('-'.repeat(50));
+            const topTrends = trendingTopics.slice(0, 5);
+            topTrends.forEach((trend, index) => {
+                console.log(`${index + 1}. ${trend.topic} (${trend.mentions} mentions)`);
+            });
+            console.log('');
+        }
+
+        // Display categories in priority order
+        const priorityOrder = ['tech', 'security', 'ai', 'frameworks', 'global', 'trending', 'advice', 'future', 'recommendations'];
+        
+        let totalArticles = 0;
+        for (const category of priorityOrder) {
+            const data = processedNews[category];
             if (data && data.summary) {
                 console.log(`\n${categoryIcons[category] || '📌'} ${categoryTitles[category] || category.toUpperCase()}`);
-                console.log('-'.repeat(50));
+                if (data.count > 0) {
+                    console.log(`📊 ${data.count} items analyzed`);
+                }
+                console.log('-'.repeat(60));
                 console.log(data.summary);
                 
-                if (data.items && data.items.length > 0) {
-                    console.log('\n📎 Sources:');
-                    data.items.forEach((item, index) => {
+                if (config.output.includeLinks && data.items && data.items.length > 0) {
+                    console.log('\n📎 Key Sources:');
+                    data.items.slice(0, 3).forEach((item, index) => {
                         console.log(`  ${index + 1}. ${item.title}`);
+                        if (config.output.includeSources && item.source) {
+                            console.log(`     📰 ${item.source}`);
+                        }
                         console.log(`     🔗 ${item.link}`);
                     });
+                    totalArticles += data.items.length;
                 }
                 console.log('');
             }
         }
 
+        console.log('='.repeat(90));
+        console.log(`✨ Digest complete! Analyzed ${totalArticles} articles from multiple sources`);
+        console.log('🚀 Built with Google Gemini AI • Next update tomorrow at 9:00 AM');
+        console.log('='.repeat(90));
+    }
+
+    // Display error fallback when everything fails
+    async displayErrorFallback() {
+        console.log('\n' + '='.repeat(80));
+        console.log('📰 DAILY TECH NEWS DIGEST - ' + new Date().toDateString());
+        console.log('⚠️  Service Temporarily Unavailable');
         console.log('='.repeat(80));
-        console.log('✨ That\'s your daily digest! Have a great day coding! ');
+        
+        console.log('\n💡 GENERAL TECH ADVICE FOR TODAY');
+        console.log('-'.repeat(50));
+        console.log('• Check GitHub trending repositories for interesting projects');
+        console.log('• Review your code for potential security vulnerabilities');
+        console.log('• Update your dependencies and check for breaking changes');
+        console.log('• Practice system design problems or algorithms');
+        console.log('• Read documentation for tools you use daily');
+        console.log('• Engage with the developer community on social platforms');
+        
+        console.log('\n🔮 TECH TRENDS TO WATCH');
+        console.log('-'.repeat(50));
+        console.log('• Serverless and edge computing adoption');
+        console.log('• AI/ML integration in backend systems');
+        console.log('• Advanced database optimization techniques');
+        console.log('• API security and rate limiting strategies');
+        console.log('• Container orchestration and microservices');
+        
+        console.log('\n='.repeat(80));
+        console.log('📧 Please check your internet connection and API configuration');
+        console.log('🔄 Next attempt will be made tomorrow at 9:00 AM');
         console.log('='.repeat(80));
     }
 }
