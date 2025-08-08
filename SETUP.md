@@ -37,17 +37,17 @@ Edit `src/newsService.js` to add custom RSS feeds:
 
 ```javascript
 this.sources = {
-    tech: [
-        'https://api.rss2json.com/v1/api.json?rss_url=YOUR_TECH_FEED',
-        // ... existing sources
-    ]
+  tech: [
+    "https://api.rss2json.com/v1/api.json?rss_url=YOUR_TECH_FEED",
+    // ... existing sources
+  ],
 };
 ```
 
 ## Commands
 
 - `npm start` - Run with daily scheduling
-- `npm test` - Run once without scheduling  
+- `npm test` - Run once without scheduling
 - `npm run dev` - Same as npm start
 
 ## Customizing AI Prompts
@@ -56,9 +56,9 @@ Edit `src/aiService.js` to modify how news is analyzed:
 
 ```javascript
 const prompts = {
-    tech: `Your custom analysis prompt for tech news...`,
-    security: `Your custom prompt for security news...`,
-    // ... other categories
+  tech: `Your custom analysis prompt for tech news...`,
+  security: `Your custom prompt for security news...`,
+  // ... other categories
 };
 ```
 
