@@ -27,6 +27,9 @@ class NewsBot {
       "📅 News bot scheduler started! Daily news will be delivered at 9:00 AM"
     );
 
+    // Test email configuration
+    this.testEmailSetup();
+
     // Run at 9:00 AM every day
     cron.schedule(config.schedule.dailyDigest, () => {
       console.log("🌅 Good morning! Generating your daily news digest...");
@@ -36,6 +39,17 @@ class NewsBot {
     // For testing - run immediately
     console.log("🧪 Running test digest now...");
     this.generateDailyDigest();
+  }
+
+  // Test email configuration
+  async testEmailSetup() {
+    console.log("📧 Testing email configuration...");
+    const isValid = await this.emailService.testEmailConfiguration();
+    if (isValid) {
+      console.log("✅ Email is configured and ready!");
+    } else {
+      console.log("⚠️ Email configuration needs attention. Check .env file.");
+    }
   }
 
   // Main function to generate daily news digest
