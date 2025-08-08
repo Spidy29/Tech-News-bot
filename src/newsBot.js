@@ -68,17 +68,21 @@ class NewsBot {
 
       // Display news in console
       await this.formatAndDisplayNews(processedNews, trendingTopics);
-      
+
       // Send email digest
       console.log("📧 Sending email digest...");
-      const emailSent = await this.emailService.sendNewsDigest(processedNews, trendingTopics);
-      
+      const emailSent = await this.emailService.sendNewsDigest(
+        processedNews,
+        trendingTopics
+      );
+
       if (emailSent) {
         console.log("✅ Daily digest delivered to your email successfully!");
       } else {
-        console.log("⚠️ Email delivery skipped. Check email configuration in .env file.");
+        console.log(
+          "⚠️ Email delivery skipped. Check email configuration in .env file."
+        );
       }
-      
     } catch (error) {
       console.error("❌ Error generating daily digest:", error.message);
       await this.displayErrorFallback();
