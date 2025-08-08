@@ -1,12 +1,13 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-const axios = require('axios');
 const cron = require('node-cron');
+const NewsService = require('./newsService');
+const AIService = require('./aiService');
+const config = require('./config');
 require('dotenv').config();
 
 class NewsBot {
     constructor() {
-        this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        this.model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
+        this.newsService = new NewsService();
+        this.aiService = new AIService();
         this.newsCategories = {
             tech: 'Technology and Programming',
             security: 'Cybersecurity Updates',
@@ -23,7 +24,7 @@ class NewsBot {
         console.log('📅 News bot scheduler started! Daily news will be delivered at 9:00 AM');
         
         // Run at 9:00 AM every day
-        cron.schedule('0 9 * * *', () => {
+        cron.schedule(config.schedule.dailyDigest, () => {
             console.log('🌅 Good morning! Generating your daily news digest...');
             this.generateDailyDigest();
         });
@@ -38,13 +39,17 @@ class NewsBot {
         try {
             console.log('📰 Fetching latest news from multiple sources...');
             
-            const newsData = await this.fetchNewsFromMultipleSources();
-            const processedNews = await this.processNewsWithGemini(newsData);
+            const allNews = await this.newsService.getAllNews();
+            const trendingTopics = this.newsService.getTrendingTopics(allNews);
             
-            await this.formatAndDisplayNews(processedNews);
+            console.log('🤖 Processing news with AI analysis...');
+            const processedNews = await this.processNewsWithAI(allNews, trendingTopics);
+            
+            await this.formatAndDisplayNews(processedNews, trendingTopics);
             
         } catch (error) {
             console.error('❌ Error generating daily digest:', error.message);
+            await this.displayErrorFallback();
         }
     }
 
