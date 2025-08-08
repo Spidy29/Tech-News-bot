@@ -1,6 +1,7 @@
 const cron = require("node-cron");
 const NewsService = require("./newsService");
 const AIService = require("./aiService");
+const EmailService = require("./emailService");
 const config = require("./config");
 require("dotenv").config();
 
@@ -8,6 +9,7 @@ class NewsBot {
   constructor() {
     this.newsService = new NewsService();
     this.aiService = new AIService();
+    this.emailService = new EmailService();
     this.newsCategories = {
       tech: "Technology and Programming",
       security: "Cybersecurity Updates",
@@ -50,7 +52,19 @@ class NewsBot {
         trendingTopics
       );
 
+      // Display news in console
       await this.formatAndDisplayNews(processedNews, trendingTopics);
+      
+      // Send email digest
+      console.log("📧 Sending email digest...");
+      const emailSent = await this.emailService.sendNewsDigest(processedNews, trendingTopics);
+      
+      if (emailSent) {
+        console.log("✅ Daily digest delivered to your email successfully!");
+      } else {
+        console.log("⚠️ Email delivery skipped. Check email configuration in .env file.");
+      }
+      
     } catch (error) {
       console.error("❌ Error generating daily digest:", error.message);
       await this.displayErrorFallback();
