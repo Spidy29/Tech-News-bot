@@ -8,7 +8,14 @@
     "dev": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["news", "ai", "gemini", "backend", "developer", "automation"],
+  "keywords": [
+    "news",
+    "ai",
+    "gemini",
+    "backend",
+    "developer",
+    "automation"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
